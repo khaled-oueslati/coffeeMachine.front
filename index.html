@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html ng-app="CoffeeApp">
+<head>
+	<title>Coffe machine</title>
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+
+</head>
+<body ng-controller="CoffeeCtrl">
+	<div class="container">
+		<nav class="navbar navbar-inverse">
+			<div class="container">
+			    <div class="navbar-header">
+			      <a class="navbar-brand" href="#">Coffee Machine</a>
+			    </div>
+	  		</div>
+		</nav>
+
+		<div class="page-header">
+    <h1>Welcome To the coffee Machine</h1>
+  </div>
+  <div >
+		<div ng-show="loading">Form Data Loading ...</div>
+		<div class="col-md-3 pull-right">
+			<div uib-alert ng-repeat="alert in alerts" ng-class="'alert-' + (alert.type || 'warning')" close="closeAlert($index)">{{alert.msg}}</div>			
+		</div>
+		
+    <form ng-show="!loading" class="col-md-6" role="form" ng-submit="submit()">
+				<div class="form-group">
+					<label class="control-label">Type Your Badge</label>
+					<input type="number" ng-model="order.UserId"  class="form-control" ng-blur="searchByUserId()"/>
+				</div>
+				<div class="form-group">
+					<table>
+						<tr>
+								<td class="col-md-3" ng-repeat="type in orderTypes track by type.Id">
+										<input type="radio" id="{{type.Label}}Radio"
+										ng-value="{{type.Id}}" ng-model="order.OrderTypeId">
+										<label for="{{type.Label}}Radio">{{type.Label}}</label>
+								</td>
+						</tr>
+					</table>
+				</div>
+				<div class="form-group">
+						<label class="control-label">Sugar quantity </label>
+						<div class="btn-toolbar" role="toolbar" aria-label="Sugar toolbar">
+							<div class="btn-group" role="group" aria-label="Sugar value"> 
+								<button ng-class="{active : order.SugarQuantity === i}" ng-repeat="i in [] | range:6" type="button" class="btn btn-default" ng-click="setSugar(i)">{{i}}</button> 							
+							</div>
+						</div>
+					</div>
+				<div class="form-group">
+					<input type="checkBox" id="mugcheckBox"
+					name="contact" ng-model="order.SelfMug">
+				 <label for="mugcheckBox">Use your own mug</label>
+				</div>
+				<div class="form-group pull-right">
+					<input class="btn btn-info" type="submit" id="submit" value="Submit" />										
+				</div>
+		</form>
+  </div>
+	</div>
+
+	<script type="text/ng-template" id="modalConfirm.html">
+		<div class="modal-header">
+				<h3 class="modal-title" id="modal-title">Conirm order</h3>
+		</div>
+		<div class="modal-body" id="modal-body">
+			<div>
+				<h3 ng-if="$ctrl.order.UserId" ng-class="{'text-success' : $ctrl.order.newUser}">User: <small class="text-muted">{{$ctrl.order.UserId}}</small></h3> 
+				<h3 >Order type: <small class="text-muted">{{$ctrl.order.Type.Label}}</small></h3> 
+				<h3 >Sugar quantity: <small class="text-muted">{{$ctrl.order.SugarQuantity}}</small></h3> 
+				<h4 ng-class="($ctrl.order.SelfMug)? 'text-danger' : 'text-info'"><i class="glyphicon glyphicon-glass"></i> 
+					<small ng-if="$ctrl.order.SelfMug" class="text-muted"> Don't forget to insert your Mug ;) </small>
+					<small ng-if="!$ctrl.order.SelfMug" class="text-muted"> We will provide a mug for you </small>
+				</h4> 
+				
+			</div>
+		</div>
+		<div class="modal-footer">
+				<button class="btn btn-primary" type="button" ng-click="$ctrl.ok()">OK</button>
+				<button class="btn btn-warning" type="button" ng-click="$ctrl.cancel()">Cancel</button>
+		</div>
+	</script>
+
+
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-animate.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-sanitize.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.1/angular-resource.js"></script>
+  <script src="./js/controllers/CoffeController.js"></script>
+  <script src="./js/controllers/ModalController.js"></script>
+  <script src="./js/Services/OrderService.js"></script>
+  <script src="./js/Services/OrderTypeService.js"></script>
+  <script src="./js/Services/RessourcesFactory.js"></script>
+
+</body>
+</html>
